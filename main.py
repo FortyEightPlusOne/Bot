@@ -572,6 +572,11 @@ async def stab(ctx,name):
     if name=="me":name=ctx.author.name
     await ctx.channel.send_me("stabbed "+name)
 
+@bot.command(name="hug")
+async def hug(ctx,name):
+    if name=="me":await ctx.channel.send_me(" gave "+ctx.author.name+" a warm hug.")
+    else: await ctx.channel.send(ctx.author.name + " gave " + name + " a warm hug.")
+
 @bot.command(name="help")
 async def help(ctx):
     await ctx.channel.send("commands list and info: bit .ly/39SVWN6")
