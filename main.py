@@ -391,6 +391,10 @@ async def readb(ctx,name):
     badges=""
     if hasgrant(a[0][0],"idk"): badges+= "[alpha male] "
     elif hasperm(a[0][0],"idk"): badges+= "[idk] "
+    if hasperm(a[0][0],"sendcommandstemp"): badges+="[o7] "
+    if os.path.exists("data/users/"+str(ctx.author.id)+"/colorbadge"):
+        c=open("data/users/"+str(ctx.author.id)+"/colorbadge")
+        badges+="["+c.read()+"] "
     if badges=="":badges+='[NBG] '
     await ctx.channel.send_me(badges+ f"{name}'s bio: "+f.read())
 
@@ -415,6 +419,9 @@ async def red(ctx):
         f.write( str( int( r ) + 1 ) )
         f.seek(0)
         await ctx.channel.send("red: "+f.read()+" blue: "+open("data/blue.txt","r").read())
+        f=open("data/users/"+str(ctx.author.id)+"/colorbadge","w")
+        f.write("red")
+        f.close()
 
 @bot.command(name="blue")
 async def blue(ctx):
@@ -433,6 +440,9 @@ async def blue(ctx):
         f.write( str( int( r ) + 1 ) )
         f.seek(0)
         await ctx.channel.send("red: "+open("data/red.txt","r").read()+" blue: "+f.read())
+        f=open("data/users/"+str(ctx.author.id)+"/colorbadge","w")
+        f.write("blue")
+        f.close()
 
 @bot.command(name="setln",aliases=["setnum","setlast","sl"])
 async def setln(ctx,new):
@@ -450,7 +460,7 @@ async def grant(ctx,user,perm):
     id2=await bot.get_users(user)
     id2=id2[0][0]
     path="data/users/"+str(id2)+"/perms.txt"
-    if hasgrant(id1,perm.strip()) and os.path.exists(path) and not hasperm(id2,perm):
+    if (hasgrant(id1,perm.strip()) or hasperm(id1,"admin")) and os.path.exists(path) and not hasperm(id2,perm):
         f=open(path,"a")
         f.write(perm.strip()+"\n")
 
@@ -549,7 +559,7 @@ async def qclear(ctx):
 
 @bot.command(name="fortuneadd")
 async def fadd(ctx,*,text):
-    if not hasperm(ctx.author.id,"fortunes"): return
+    if not hasperm(ctx.author.id,"fortuneadd"): return
     f=open("data/fortunes.txt","a")
     f.write(text+"\n")
 
@@ -580,6 +590,18 @@ async def hug(ctx,name):
 @bot.command(name="help")
 async def help(ctx):
     await ctx.channel.send("commands list and info: bit .ly/39SVWN6")
+
+@bot.command(name="kill_nightbot")
+async def begone(ctx):
+    b=[".me punted nightbot into the atmosphere",
+       ".me pummeled nightbot into the ground",
+       ".me slapped nightbot",
+       ".me hugged nightb- i mean punched nightbot",
+       ".me threw a couch at nightbot",
+       ".me toilet paper'd nightbot's house",
+       ".me shot nightbot"]
+    a=choice(b)
+    await ctx.channel.send(a)
 
 # will add a list of "badge perms" whic the user can remove from themselves without the grant
 
